@@ -59,7 +59,7 @@ def play_hangman() -> None:
                 guessed_letters.add(guess)
                 lives -= 1
         elif guess == word:  # Guessing the full word
-            print("Congratulations! You've guessed the word!")
+            print("\033[32mCongratulations! You've guessed the word!\033[0m")
             return
         else:
             print("Incorrect guess.")
@@ -71,7 +71,7 @@ def play_hangman() -> None:
 
     # Game over messages
     if word_letters:
-        print(f"Game Over! Unfortunately you lost the game! The word was: {word}")
+        print(f"\033[31mGame Over! Unfortunately you lost the game! The word was: {word}\033[0m")
     else:
         print("Congratulations! You've won!")
     display_hangman(lives)
