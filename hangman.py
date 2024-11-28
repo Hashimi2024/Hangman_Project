@@ -1,5 +1,5 @@
 # main.py
-from Hangman_pics import HANGMANPICS
+from hangman_pics import HANGMANPICS
 import random
 
 # Type annotations
@@ -28,6 +28,7 @@ def play_hangman() -> None:
     Main function to play the hangman game.
     """
     word = random.choice(word_list()).lower()  # Select a random word
+    print(word)
     word_letters = set(word)  # Unique letters in the word
     guessed_letters = set()  # Letters guessed by the user
     lives = 10  # Maximum incorrect guesses
