@@ -1,80 +1,81 @@
+from hangman_pics import HANGMANPICS
 import random
+
+# Type annotations
 from typing import List
 
-word_pool = ["python", "hangman", "fastapi", "programming", "restaurant"]
 
-# Function to display the current game state
-def display_word(word: str, guessed_letters: List[str]) -> str:
+def display_hangman(lives: int) -> None:
     """
-    Shows the word with unguessed letters hidden as underscores.
-
-    Args:
-        word (str): The word to guess.
-        guessed_letters (List[str]): Letters guessed by the user.
-
-    Returns:
-        str: The word with underscores for unguessed letters.
+    Displays the current hangman stage.
     """
-    return " ".join([letter if letter in guessed_letters else "_" for letter in word])
+    print(HANGMANPICS[10 - lives])
 
-# Function to play the hangman game
-def play_hangman(word_list: List[str], max_attempts: int = 10) -> None:
+
+def word_list() -> List[str]:
     """
-    Main function to run the Hangman game.
-
-    Args:
-        word_list (List[str]): List of possible words for the game.
-        max_attempts (int): Maximum number of incorrect attempts allowed.
+    Returns a list of possible words for the game.
     """
-    # Randomly select a word
-    word = random.choice(word_list).lower()
-    guessed_letters = []
-    incorrect_guesses = 0
+    return ["cat", "dog", "fox", "owl", "bat", "cow", "ant",
+        "rabbit", "panda", "tiger", "zebra", "koala", "camel", "otter",
+        "kangaroo", "chameleon", "platypus", "porcupine", "pangolin",
+        "armadillo", "hippopotamus"]
 
-    print("Welcome to Hangman!")
-    print("Guess the word by guessing letters or the full word.")
-    print(f"You have {max_attempts} incorrect attempts.")
 
-    # Game loop
-    while incorrect_guesses < max_attempts:
-        print("\n" + display_word(word, guessed_letters))
-        guess = input("Enter a letter or guess the word: ").lower()
+def play_hangman() -> None:
+    """
+    Main function to play the hangman game.
+    """
+    word = random.choice(word_list()).lower()  # Select a random word
+    word_letters = set(word)  # Unique letters in the word
+    guessed_letters = set()  # Letters guessed by the user
+    lives = 10  # Maximum incorrect guesses
+    print("\033[1;3mWelcome to Hangman!\033[0m")
+    print("\033[1;3mPlease guess the name of an animal!\033[0m")
+    # print("Please guess the name of an animal!")
+    print("_ " * len(word))  # Initial display of the word
 
-        # Validate input
-        if not guess.isalpha():
-            print("Invalid input. Please enter only letters.")
+    while lives > 0 and word_letters:
+        print("\nGuessed letters: ", " ".join(sorted(guessed_letters)))
+        print(f"Lives remaining: {lives}")
+        display_hangman(lives)
+
+        # User input
+        guess = input("Enter a letter or the full word: ").lower()
+
+        if guess.isdigit():  # Check if the input is a number
+            print("Invalid input! Please enter a letter or word.")
             continue
 
-        if len(guess) == 1:  # Single letter guess
+        if len(guess) == 1:  # Guessing a single letter
             if guess in guessed_letters:
-                print(f"You already guessed '{guess}'. Try again!")
-            elif guess in word:
-                print(f"Good guess! '{guess}' is in the word.")
-                guessed_letters.append(guess)
+                print("You already guessed that letter!")
+            elif guess in word_letters:
+                print("Good guess!")
+                word_letters.remove(guess)
+                guessed_letters.add(guess)
             else:
-                print(f"Wrong guess! '{guess}' is not in the word.")
-                guessed_letters.append(guess)
-                incorrect_guesses += 1
-        elif len(guess) == len(word):  # Full word guess
-            if guess == word:
-                print(f"Congratulations! You guessed the word: {word}")
-                return
-            else:
-                print(f"Wrong guess! '{guess}' is not the word.")
-                incorrect_guesses += 1
-        else:
-            print("Your guess doesn't match the word length. Try again.")
-
-        print(f"Lives left: {max_attempts - incorrect_guesses}")
-
-        # Check if the word is fully guessed
-        if all(letter in guessed_letters for letter in word):
-            print(f"Congratulations! You guessed the word: {word}")
+                print("Incorrect guess.")
+                guessed_letters.add(guess)
+                lives -= 1
+        elif guess == word:  # Guessing the full word
+            print("Congratulations! You've guessed the word!")
             return
+        else:
+            print("Incorrect guess.")
+            lives -= 1
 
-    print(f"Game Over! The word was: {word}")
+        # Display current progress
+        current_progress = [letter if letter in guessed_letters else "_" for letter in word]
+        print(" ".join(current_progress))
 
-# Main function to start the game
+    # Game over messages
+    if word_letters:
+        print(f"Game Over! Unfortunately you lost the game! The word was: {word}")
+    else:
+        print("Congratulations! You've won!")
+    display_hangman(lives)
+
+
 if __name__ == "__main__":
-    # word_pool = ["python", "hangman", "fastapi", "programming", "restaurant"]
-    play_hangman(word_pool)
+    play_hangman()
