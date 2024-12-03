@@ -37,7 +37,6 @@ def play_hangman() -> None:
         print(f"Lives remaining: {lives}")
         display_hangman(lives)
 
-        # User input
         guess = input("Enter a letter or the full word: ").lower()
 
         if guess.isdigit():
@@ -68,7 +67,7 @@ def play_hangman() -> None:
     if word_letters:
         print(f"\033[31mGame Over! Unfortunately you lost the game! The word was: {word}\033[0m")
     else:
-        print("Congratulations! You've won!")
+        print("\033[32mCongratulations! You've won!\033[0m")
     display_hangman(lives)
 
 
