@@ -1,7 +1,5 @@
 from hangman_pics import HANGMANPICS
 import random
-
-# Type annotations
 from typing import List
 
 
@@ -26,14 +24,13 @@ def play_hangman() -> None:
     """
     Main function to play the hangman game.
     """
-    word = random.choice(word_list()).lower()  # Select a random word
-    word_letters = set(word)  # Unique letters in the word
-    guessed_letters = set()  # Letters guessed by the user
-    lives = 10  # Maximum incorrect guesses
+    word = random.choice(word_list()).lower()
+    word_letters = set(word)
+    guessed_letters = set()
+    lives = 10
     print("\033[1;3mWelcome to Hangman!\033[0m")
     print("\033[1;3mPlease guess the name of an animal!\033[0m")
-    # print("Please guess the name of an animal!")
-    print("_ " * len(word))  # Initial display of the word
+    print("_ " * len(word))
 
     while lives > 0 and word_letters:
         print("\nGuessed letters: ", " ".join(sorted(guessed_letters)))
@@ -43,11 +40,11 @@ def play_hangman() -> None:
         # User input
         guess = input("Enter a letter or the full word: ").lower()
 
-        if guess.isdigit():  # Check if the input is a number
+        if guess.isdigit():
             print("Invalid input! Please enter a letter or word.")
             continue
 
-        if len(guess) == 1:  # Guessing a single letter
+        if len(guess) == 1:
             if guess in guessed_letters:
                 print("You already guessed that letter!")
             elif guess in word_letters:
@@ -58,18 +55,16 @@ def play_hangman() -> None:
                 print("Incorrect guess.")
                 guessed_letters.add(guess)
                 lives -= 1
-        elif guess == word:  # Guessing the full word
+        elif guess == word:
             print("\033[32mCongratulations! You've guessed the word!\033[0m")
             return
         else:
             print("Incorrect guess.")
             lives -= 1
 
-        # Display current progress
         current_progress = [letter if letter in guessed_letters else "_" for letter in word]
         print(" ".join(current_progress))
 
-    # Game over messages
     if word_letters:
         print(f"\033[31mGame Over! Unfortunately you lost the game! The word was: {word}\033[0m")
     else:
